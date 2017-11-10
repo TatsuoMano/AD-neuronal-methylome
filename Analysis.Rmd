@@ -1,0 +1,48 @@
+---
+title: "Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##Install ChAMP
+```{r Install ChAMP}
+source("http://bioconductor.org/biocLite.R") 
+biocLite("ChAMP")
+library(ChAMP)
+```
+
+##Data Loading
+```{r Data loading}
+myLoad <- champ.load() #load dataset using samplesheet.csv
+```
+
+##Normalization and Batch correction
+```{r Normalization & Batch correction}
+myNorm <- champ.norm() #beta values normalized with BMIQ method
+champ.SVD() #SVD analysis
+myNorm <- champ.runCombat(beta=myNorm,pd=myLoad$pd,batchname=c("Slide")) #batch correction
+```
+
+##saving dataframe objects
+```{r saving dataframe objects}
+limma <- champ.DMP(adjPVal = 1)  #No filtration
+df <- limma[[1]]  #statistic data
+```
+
+##Combine beta values and static data
+```{r Combine beta values and static data}
+df$CHR <- factor(df$CHR, levels=c("1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","X","Y"))
+df.probesort <- df[order(rownames(df)),]
+
+df.Norm <- as.data.frame(myNorm)
+df.Norm.probesort <- df.Norm[order(rownames(df.Norm)),]
+
+df.all.probesort <- cbind(df.Norm.probesort, df.probesort)
+df.all <- df.all.probesort[order(df.all.probesort$CHR, df.all.probesort$MAPINFO),]　#Complete Data Set
+```
+
+
+
