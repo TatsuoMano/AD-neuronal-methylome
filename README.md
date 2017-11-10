@@ -1,7 +1,7 @@
 # AD-neuronal-methylome
 Neuron-specific methylome analysis of Alzheimer's disease
 
-#Getting started
+# Getting started
 1. Install [R](http://www.r-project.org/) and the free version of 
 [RStudio](http://rstudio.org/download/).
 
